@@ -1,6 +1,6 @@
 package com.berkanaslan.hibernate.demo.application;
 
-import  com.berkanaslan.hibernate.demo.entity.Instructor;
+import com.berkanaslan.hibernate.demo.entity.Instructor;
 import com.berkanaslan.hibernate.demo.entity.InstructorDetail;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -1,13 +1,13 @@
 package com.berkanaslan.hibernate.demo.application;
 
-import  com.berkanaslan.hibernate.demo.entity.Instructor;
+import com.berkanaslan.hibernate.demo.entity.Instructor;
 import com.berkanaslan.hibernate.demo.entity.InstructorDetail;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class DeleteInstructorDetailApplication {
+public class DeleteDemo {
     public static void main(String[] args) {
         // Create session factory
         SessionFactory sessionFactory = new Configuration()
@@ -16,24 +16,20 @@ public class DeleteInstructorDetailApplication {
                 .addAnnotatedClass(InstructorDetail.class)
                 .buildSessionFactory();
 
-        try (sessionFactory; Session session = sessionFactory.getCurrentSession()) {
+        // Create a session
+        Session session = sessionFactory.getCurrentSession();
+
+        try (sessionFactory) {
             // Start a transaction
             session.beginTransaction();
 
-            int id = 3;
+            int id = 1;
 
-            InstructorDetail instructorDetail = session.get(InstructorDetail.class, id);
+            Instructor instructor = session.get(Instructor.class, id);
 
-            // Remove the associated object referance
-            // Break bi-directional link
+            System.out.println(instructor.toString());
 
-            instructorDetail.getInstructor().setInstructorDetail(null);
-
-            System.out.println("Instructor Detail: " + instructorDetail.toString());
-            System.out.println("Instructor: " + instructorDetail.getInstructor());
-
-            // Now let's delete the instructor detail
-            session.delete(instructorDetail);
+            session.delete(instructor); 
 
             // Commit transaction
             session.getTransaction().commit();

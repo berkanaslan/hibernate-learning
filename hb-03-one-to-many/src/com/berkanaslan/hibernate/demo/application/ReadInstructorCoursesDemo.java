@@ -1,41 +1,35 @@
 package com.berkanaslan.hibernate.demo.application;
 
-import  com.berkanaslan.hibernate.demo.entity.Instructor;
+import com.berkanaslan.hibernate.demo.entity.Course;
+import com.berkanaslan.hibernate.demo.entity.Instructor;
 import com.berkanaslan.hibernate.demo.entity.InstructorDetail;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class DeleteInstructorDetailApplication {
+public class ReadInstructorCoursesDemo {
     public static void main(String[] args) {
         // Create session factory
         SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Instructor.class)
                 .addAnnotatedClass(InstructorDetail.class)
+                .addAnnotatedClass(Course.class)
                 .buildSessionFactory();
 
         try (sessionFactory; Session session = sessionFactory.getCurrentSession()) {
-            // Start a transaction
             session.beginTransaction();
 
-            int id = 3;
+            int id = 1;
+            Instructor instructor = session.get(Instructor.class, id);
 
-            InstructorDetail instructorDetail = session.get(InstructorDetail.class, id);
+            // Get courses fot the instructor
 
-            // Remove the associated object referance
-            // Break bi-directional link
+            System.out.println("Courses: " + instructor.getCourses());
 
-            instructorDetail.getInstructor().setInstructorDetail(null);
 
-            System.out.println("Instructor Detail: " + instructorDetail.toString());
-            System.out.println("Instructor: " + instructorDetail.getInstructor());
 
-            // Now let's delete the instructor detail
-            session.delete(instructorDetail);
-
-            // Commit transaction
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();

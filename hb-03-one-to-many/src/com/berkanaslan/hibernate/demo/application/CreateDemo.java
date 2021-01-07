@@ -1,13 +1,13 @@
 package com.berkanaslan.hibernate.demo.application;
 
-import  com.berkanaslan.hibernate.demo.entity.Instructor;
+import com.berkanaslan.hibernate.demo.entity.Instructor;
 import com.berkanaslan.hibernate.demo.entity.InstructorDetail;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class DeleteInstructorDetailApplication {
+public class CreateDemo {
     public static void main(String[] args) {
         // Create session factory
         SessionFactory sessionFactory = new Configuration()
@@ -16,24 +16,23 @@ public class DeleteInstructorDetailApplication {
                 .addAnnotatedClass(InstructorDetail.class)
                 .buildSessionFactory();
 
-        try (sessionFactory; Session session = sessionFactory.getCurrentSession()) {
+        // Create a session
+        Session session = sessionFactory.getCurrentSession();
+
+        try (sessionFactory) {
             // Start a transaction
             session.beginTransaction();
 
-            int id = 3;
+            Instructor tempInstructor = new Instructor("Berkan", "Aslan", "hello@berkanaslan.com");
+            InstructorDetail tempInstructorDetail = new InstructorDetail("@berkanaslan", "Coffee");
 
-            InstructorDetail instructorDetail = session.get(InstructorDetail.class, id);
+            // Associate the objects
+            tempInstructor.setInstructorDetail(tempInstructorDetail);
 
-            // Remove the associated object referance
-            // Break bi-directional link
-
-            instructorDetail.getInstructor().setInstructorDetail(null);
-
-            System.out.println("Instructor Detail: " + instructorDetail.toString());
-            System.out.println("Instructor: " + instructorDetail.getInstructor());
-
-            // Now let's delete the instructor detail
-            session.delete(instructorDetail);
+            // Save the instructor
+            // Note: This will ALSO save the details object
+            // Because of CascadeType.ALL
+            session.save(tempInstructor);
 
             // Commit transaction
             session.getTransaction().commit();

@@ -1,41 +1,39 @@
 package com.berkanaslan.hibernate.demo.application;
 
-import  com.berkanaslan.hibernate.demo.entity.Instructor;
+import com.berkanaslan.hibernate.demo.entity.Course;
+import com.berkanaslan.hibernate.demo.entity.Instructor;
 import com.berkanaslan.hibernate.demo.entity.InstructorDetail;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class DeleteInstructorDetailApplication {
+public class CreateCourseDemo {
     public static void main(String[] args) {
         // Create session factory
         SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Instructor.class)
                 .addAnnotatedClass(InstructorDetail.class)
+                .addAnnotatedClass(Course.class)
                 .buildSessionFactory();
 
         try (sessionFactory; Session session = sessionFactory.getCurrentSession()) {
-            // Start a transaction
             session.beginTransaction();
 
-            int id = 3;
+            int id = 1;
 
-            InstructorDetail instructorDetail = session.get(InstructorDetail.class, id);
+            Instructor instructor = session.get(Instructor.class, id);
 
-            // Remove the associated object referance
-            // Break bi-directional link
+            Course course1 = new Course("Air Guitar, The Ultimate Guide");
+            Course course2 = new Course("The Pinball Masterclass");
 
-            instructorDetail.getInstructor().setInstructorDetail(null);
+            instructor.add(course1);
+            instructor.add(course2);
 
-            System.out.println("Instructor Detail: " + instructorDetail.toString());
-            System.out.println("Instructor: " + instructorDetail.getInstructor());
+            session.save(course1);
+            session.save(course2);
 
-            // Now let's delete the instructor detail
-            session.delete(instructorDetail);
-
-            // Commit transaction
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
