@@ -90,7 +90,7 @@ public class Course {
     }
 
     public void addStudent(Student student) {
-        if (student == null) {
+        if (students == null) {
             students = new ArrayList<>();
         }
         students.add(student);
